@@ -1,0 +1,40 @@
+bool isPalindrome( struct ListNode* head) {
+    struct ListNode * top=NULL;
+   struct ListNode * ptr=head;
+
+     struct ListNode *temp=NULL;
+ 
+   while(ptr!=NULL)
+   {         temp=(struct ListNode*)malloc(sizeof(struct ListNode ));
+            temp->val=ptr->val;
+            temp->next=top;
+            top=temp;
+        
+        ptr=ptr->next;
+   }
+
+   ptr=head;
+   int flag=1;
+  
+   while(ptr!=NULL && top!=NULL)
+
+   {
+      
+      if(ptr->val!=top->val)
+      {
+             flag=0;
+             break;
+            
+      }
+
+      ptr=ptr->next;
+      temp=top;
+        top=top->next;
+      free(temp);
+    
+   }
+   if (flag==0)
+   return false;
+   else
+   return true;
+   }
