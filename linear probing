@@ -1,0 +1,115 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define TABLE_SIZE 5 
+
+typedef struct {
+    int key;   
+    int value; 
+} EmployeeRecord;
+
+
+EmployeeRecord hashTable[TABLE_SIZE];
+
+void initializeTable() {
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        hashTable[i].key = -1; 
+        hashTable[i].value = -1;
+    }
+}
+
+
+int hashFunction(int key) {
+    return key % TABLE_SIZE;
+}
+
+
+void insert(int key, int value) {
+    int hashIndex = hashFunction(key);
+    int originalIndex = hashIndex;
+
+  
+    while (hashTable[hashIndex].key != -1) {
+        printf("Collision at index %d. Trying next index...\n", hashIndex);
+        hashIndex = (hashIndex + 1) % TABLE_SIZE;
+
+        if (hashIndex == originalIndex) {
+            printf("Error: Hash table is full. Cannot insert key %d\n", key);
+            return;
+        }
+    }
+
+   
+    hashTable[hashIndex].key = key;
+    hashTable[hashIndex].value = value;
+    printf("Inserted key %d at index %d\n", key, hashIndex);
+}
+
+
+void displayTable() {
+    printf("\nHash Table:\n");
+    printf("Index\tKey\tValue\n");
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        if (hashTable[i].key != -1)
+            printf("%d\t%d\t%d\n", i, hashTable[i].key, hashTable[i].value);
+        else
+            printf("%d\t--\t--\n", i);
+    }
+}
+
+int main() {
+    int n, key, value;
+
+ 
+    initializeTable();
+
+    printf("Enter the number of employee records: ");
+    scanf("%d", &n);
+
+  
+    for (int i = 0; i < n; i++) {
+        printf("Enter key (4-digit) and value for employee %d: ", i + 1);
+        scanf("%d %d", &key, &value);
+
+        
+        if (key < 1000 || key > 9999) {
+            printf("Invalid key. Please enter a 4-digit key.\n");
+            i--; 
+        } else {
+            insert(key, value);
+        }
+    }
+
+ 
+    displayTable();
+
+    return 0;
+}
+output:
+
+Enter the number of employee records: 5
+Enter key (4-digit) and value for employee 1: 1234 100
+Inserted key 1234 at index 4
+Enter key (4-digit) and value for employee 2: 5678 200
+Inserted key 5678 at index 8
+Enter key (4-digit) and value for employee 3: 9012 300
+Inserted key 9012 at index 2
+Enter key (4-digit) and value for employee 4: 3456 400
+Inserted key 3456 at index 6
+Enter key (4-digit) and value for employee 5: 1234 500
+Collision at index 4. Trying next index...
+Inserted key 1234 at index 5
+
+Hash Table:
+Index   Key     Value
+0       --      --
+1       --      --
+2       9012    300
+3       --      --
+4       1234    100
+5       1234    500
+6       3456    400
+7       --      --
+8       5678    200
+9       --      --
+
